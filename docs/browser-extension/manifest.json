@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "Multi-AI Chat Memory",
+  "version": "1.0.0",
+  "description": "Capture and store AI chat conversations from multiple platforms",
+  "permissions": ["storage", "activeTab"],
+  "host_permissions": [
+    "https://chat.openai.com/*",
+    "https://chatgpt.com/*",
+    "https://claude.ai/*",
+    "https://gemini.google.com/*",
+    "https://www.perplexity.ai/*",
+    "https://poe.com/*"
+  ],
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": "icons/icon48.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://chat.openai.com/*",
+        "https://chatgpt.com/*",
+        "https://claude.ai/*",
+        "https://gemini.google.com/*",
+        "https://www.perplexity.ai/*",
+        "https://poe.com/*"
+      ],
+      "js": ["platformDetector.js", "content.js"]
+    }
+  ]
+}

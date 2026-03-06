@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body { width: 320px; padding: 16px; font-family: system-ui, sans-serif; }
+    h1 { font-size: 18px; margin: 0 0 8px; }
+    .status { padding: 8px 12px; border-radius: 8px; background: #f0f9f0; color: #166534; font-size: 13px; margin-bottom: 12px; }
+    .stat { display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px; border-bottom: 1px solid #eee; }
+    .btn { display: block; width: 100%; padding: 10px; border: none; border-radius: 8px; background: #2563eb; color: white; font-size: 14px; cursor: pointer; margin-top: 12px; }
+    .btn:hover { background: #1d4ed8; }
+  </style>
+</head>
+<body>
+  <h1>🧠 MemoryAI</h1>
+  <div class="status" id="status">Connected</div>
+  <div class="stat"><span>Chats saved today</span><span id="count">0</span></div>
+  <div class="stat"><span>Current platform</span><span id="platform">—</span></div>
+  <button class="btn" id="openDashboard">Open Dashboard</button>
+  <script src="popup.js"></script>
+</body>
+</html>
