@@ -1,7 +1,22 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, MessageSquare, Search, BookOpen, Menu, X, ChevronRight } from "lucide-react";
+import { LayoutDashboard, MessageSquare, Search, BookOpen, Menu, X, ChevronRight, Moon, Sun } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
+
+function useTheme() {
+  const [dark, setDark] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return localStorage.getItem("theme") === "dark" ||
+      (!localStorage.getItem("theme") && window.matchMedia("(prefers-color-scheme: dark)").matches);
+  });
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", dark);
+    localStorage.setItem("theme", dark ? "dark" : "light");
+  }, [dark]);
+
+  return { dark, toggle: () => setDark((d) => !d) };
+}
 
 const NAV_ITEMS = [
   { to: "/", icon: LayoutDashboard, label: "Overview" },
@@ -13,6 +28,7 @@ const NAV_ITEMS = [
 export function DashboardLayout({ children }: { children: ReactNode }) {
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { dark, toggle } = useTheme();
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -47,6 +63,15 @@ export function DashboardLayout({ children }: { children: ReactNode }) {
           })}
         </nav>
 
+        <div className="px-3 pb-1.5">
+          <button
+            onClick={toggle}
+            className="flex items-center gap-2.5 w-full px-2.5 py-2 rounded-md text-[13px] font-medium text-muted-foreground hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground transition-colors"
+          >
+            {dark ? <Sun className="w-4 h-4 shrink-0" /> : <Moon className="w-4 h-4 shrink-0" />}
+            {dark ? "Light mode" : "Dark mode"}
+          </button>
+        </div>
         <div className="p-3 border-t border-sidebar-border">
           <div className="flex items-center gap-2.5 px-2.5 py-1.5">
             <div className="w-7 h-7 rounded-full bg-secondary flex items-center justify-center text-[11px] font-semibold text-secondary-foreground">
