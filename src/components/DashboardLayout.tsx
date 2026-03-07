@@ -63,6 +63,15 @@ export function DashboardLayout({ children }: { children: ReactNode }) {
           })}
         </nav>
 
+        <div className="px-3 pb-1.5">
+          <button
+            onClick={toggle}
+            className="flex items-center gap-2.5 w-full px-2.5 py-2 rounded-md text-[13px] font-medium text-muted-foreground hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground transition-colors"
+          >
+            {dark ? <Sun className="w-4 h-4 shrink-0" /> : <Moon className="w-4 h-4 shrink-0" />}
+            {dark ? "Light mode" : "Dark mode"}
+          </button>
+        </div>
         <div className="p-3 border-t border-sidebar-border">
           <div className="flex items-center gap-2.5 px-2.5 py-1.5">
             <div className="w-7 h-7 rounded-full bg-secondary flex items-center justify-center text-[11px] font-semibold text-secondary-foreground">
