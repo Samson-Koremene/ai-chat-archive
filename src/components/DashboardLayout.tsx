@@ -1,7 +1,22 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, MessageSquare, Search, BookOpen, Menu, X, ChevronRight } from "lucide-react";
+import { LayoutDashboard, MessageSquare, Search, BookOpen, Menu, X, ChevronRight, Moon, Sun } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
+
+function useTheme() {
+  const [dark, setDark] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return localStorage.getItem("theme") === "dark" ||
+      (!localStorage.getItem("theme") && window.matchMedia("(prefers-color-scheme: dark)").matches);
+  });
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", dark);
+    localStorage.setItem("theme", dark ? "dark" : "light");
+  }, [dark]);
+
+  return { dark, toggle: () => setDark((d) => !d) };
+}
 
 const NAV_ITEMS = [
   { to: "/", icon: LayoutDashboard, label: "Overview" },
