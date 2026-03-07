@@ -1,7 +1,7 @@
 import { ReactNode, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, MessageSquare, Search, BookOpen, Menu, X } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { LayoutDashboard, MessageSquare, Search, BookOpen, Menu, X, ChevronRight } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
 
 const NAV_ITEMS = [
   { to: "/", icon: LayoutDashboard, label: "Overview" },
@@ -15,51 +15,61 @@ export function DashboardLayout({ children }: { children: ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen bg-background">
       {/* Desktop sidebar */}
-      <aside className="hidden md:flex w-64 flex-col bg-sidebar text-sidebar-foreground border-r border-sidebar-border">
-        <div className="p-6">
-          <h1 className="text-xl font-bold text-sidebar-primary-foreground">
-            <span className="text-gradient bg-gradient-hero bg-clip-text">MemoryAI</span>
-          </h1>
-          <p className="text-xs text-sidebar-foreground/60 mt-1">Multi-AI Chat Memory</p>
+      <aside className="hidden md:flex w-[240px] flex-col border-r border-sidebar-border bg-sidebar shrink-0 sticky top-0 h-screen">
+        <div className="h-14 flex items-center px-5 border-b border-sidebar-border">
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-lg bg-primary flex items-center justify-center">
+              <span className="text-primary-foreground text-xs font-bold">M</span>
+            </div>
+            <span className="font-semibold text-sm text-foreground tracking-tight">MemoryAI</span>
+          </div>
         </div>
-        <nav className="flex-1 px-3 space-y-1">
+
+        <nav className="flex-1 px-3 py-3 space-y-0.5">
           {NAV_ITEMS.map((item) => {
             const active = location.pathname === item.to;
             return (
               <Link
                 key={item.to}
                 to={item.to}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                className={`flex items-center gap-2.5 px-2.5 py-2 rounded-md text-[13px] font-medium transition-colors ${
                   active
-                    ? "bg-sidebar-accent text-sidebar-primary-foreground"
-                    : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
+                    ? "bg-sidebar-accent text-sidebar-accent-foreground"
+                    : "text-sidebar-muted hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground"
                 }`}
               >
-                <item.icon className="w-4 h-4" />
+                <item.icon className="w-4 h-4 shrink-0" />
                 {item.label}
               </Link>
             );
           })}
         </nav>
-        <div className="p-4 border-t border-sidebar-border">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-sidebar-accent flex items-center justify-center text-xs font-bold text-sidebar-primary-foreground">
+
+        <div className="p-3 border-t border-sidebar-border">
+          <div className="flex items-center gap-2.5 px-2.5 py-1.5">
+            <div className="w-7 h-7 rounded-full bg-secondary flex items-center justify-center text-[11px] font-semibold text-secondary-foreground">
               U
             </div>
-            <div>
-              <p className="text-sm font-medium text-sidebar-foreground">User</p>
-              <p className="text-xs text-sidebar-foreground/50">Free Plan</p>
+            <div className="flex-1 min-w-0">
+              <p className="text-[13px] font-medium text-foreground truncate">User</p>
+              <p className="text-[11px] text-muted-foreground">Free plan</p>
             </div>
+            <ChevronRight className="w-3.5 h-3.5 text-muted-foreground" />
           </div>
         </div>
       </aside>
 
       {/* Mobile header */}
-      <div className="md:hidden fixed top-0 inset-x-0 z-50 bg-card border-b border-border px-4 py-3 flex items-center justify-between">
-        <h1 className="text-lg font-bold text-gradient bg-gradient-hero bg-clip-text">MemoryAI</h1>
-        <button onClick={() => setMobileOpen(!mobileOpen)} className="p-2 rounded-lg hover:bg-secondary">
+      <div className="md:hidden fixed top-0 inset-x-0 z-50 h-14 bg-background border-b border-border px-4 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <div className="w-7 h-7 rounded-lg bg-primary flex items-center justify-center">
+            <span className="text-primary-foreground text-xs font-bold">M</span>
+          </div>
+          <span className="font-semibold text-sm tracking-tight">MemoryAI</span>
+        </div>
+        <button onClick={() => setMobileOpen(!mobileOpen)} className="p-2 -mr-2 rounded-md hover:bg-secondary">
           {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
       </div>
@@ -67,44 +77,52 @@ export function DashboardLayout({ children }: { children: ReactNode }) {
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            initial={{ opacity: 0, x: -260 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -260 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
             className="md:hidden fixed inset-0 z-40 flex"
           >
-            <div className="w-64 bg-sidebar text-sidebar-foreground flex flex-col">
-              <div className="p-6 pt-16">
-                <nav className="space-y-1">
-                  {NAV_ITEMS.map((item) => {
-                    const active = location.pathname === item.to;
-                    return (
-                      <Link
-                        key={item.to}
-                        to={item.to}
-                        onClick={() => setMobileOpen(false)}
-                        className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                          active
-                            ? "bg-sidebar-accent text-sidebar-primary-foreground"
-                            : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50"
-                        }`}
-                      >
-                        <item.icon className="w-4 h-4" />
-                        {item.label}
-                      </Link>
-                    );
-                  })}
-                </nav>
-              </div>
-            </div>
-            <div className="flex-1 bg-foreground/20" onClick={() => setMobileOpen(false)} />
+            <motion.div
+              initial={{ x: -240 }}
+              animate={{ x: 0 }}
+              exit={{ x: -240 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              className="w-[240px] bg-background border-r border-border flex flex-col"
+            >
+              <div className="h-14" />
+              <nav className="flex-1 px-3 py-3 space-y-0.5">
+                {NAV_ITEMS.map((item) => {
+                  const active = location.pathname === item.to;
+                  return (
+                    <Link
+                      key={item.to}
+                      to={item.to}
+                      onClick={() => setMobileOpen(false)}
+                      className={`flex items-center gap-2.5 px-2.5 py-2 rounded-md text-[13px] font-medium transition-colors ${
+                        active
+                          ? "bg-secondary text-accent-foreground"
+                          : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground"
+                      }`}
+                    >
+                      <item.icon className="w-4 h-4 shrink-0" />
+                      {item.label}
+                    </Link>
+                  );
+                })}
+              </nav>
+            </motion.div>
+            <div className="flex-1 bg-foreground/10" onClick={() => setMobileOpen(false)} />
           </motion.div>
         )}
       </AnimatePresence>
 
       {/* Main content */}
-      <main className="flex-1 md:overflow-y-auto">
-        <div className="pt-16 md:pt-0 p-4 md:p-8 max-w-6xl mx-auto">
-          {children}
+      <main className="flex-1 min-w-0 overflow-y-auto">
+        <div className="pt-14 md:pt-0">
+          <div className="px-6 py-6 md:px-10 md:py-8 max-w-5xl">
+            {children}
+          </div>
         </div>
       </main>
     </div>
