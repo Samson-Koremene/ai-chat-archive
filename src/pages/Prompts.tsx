@@ -1,5 +1,4 @@
 import { DashboardLayout } from "@/components/DashboardLayout";
-import { motion } from "framer-motion";
 import { Copy, Check } from "lucide-react";
 import { useState } from "react";
 
@@ -42,32 +41,29 @@ const Prompts = () => {
   return (
     <DashboardLayout>
       <div className="mb-6">
-        <h1 className="text-3xl font-bold">Prompt Library</h1>
-        <p className="text-muted-foreground mt-1">Your best prompts extracted from conversations</p>
+        <h1 className="text-xl font-semibold tracking-tight">Prompt Library</h1>
+        <p className="text-sm text-muted-foreground mt-1">Your best prompts, extracted from conversations</p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
-        {SAMPLE_PROMPTS.map((prompt, i) => (
-          <motion.div
+      <div className="grid gap-3 md:grid-cols-2">
+        {SAMPLE_PROMPTS.map((prompt) => (
+          <div
             key={prompt.id}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.05 }}
-            className="bg-card rounded-xl p-5 shadow-card border border-border"
+            className="bg-card rounded-lg p-4 border border-border group"
           >
             <div className="flex items-center justify-between mb-3">
-              <span className="text-xs px-2 py-0.5 rounded-full bg-secondary text-secondary-foreground font-medium">
+              <span className="text-[11px] px-2 py-0.5 rounded-md bg-secondary text-secondary-foreground font-medium uppercase tracking-wider">
                 {prompt.category}
               </span>
               <button
                 onClick={() => handleCopy(prompt.id, prompt.text)}
-                className="p-1.5 rounded-md hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground"
+                className="p-1.5 rounded-md hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground opacity-0 group-hover:opacity-100"
               >
-                {copied === prompt.id ? <Check className="w-4 h-4 text-accent" /> : <Copy className="w-4 h-4" />}
+                {copied === prompt.id ? <Check className="w-3.5 h-3.5 text-primary" /> : <Copy className="w-3.5 h-3.5" />}
               </button>
             </div>
-            <p className="text-sm font-mono leading-relaxed text-card-foreground">{prompt.text}</p>
-          </motion.div>
+            <p className="text-[13px] font-mono leading-relaxed text-card-foreground">{prompt.text}</p>
+          </div>
         ))}
       </div>
     </DashboardLayout>
