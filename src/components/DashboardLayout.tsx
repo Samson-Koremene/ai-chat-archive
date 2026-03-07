@@ -28,6 +28,7 @@ const NAV_ITEMS = [
 export function DashboardLayout({ children }: { children: ReactNode }) {
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { dark, toggle } = useTheme();
 
   return (
     <div className="flex min-h-screen bg-background">
