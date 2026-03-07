@@ -12,16 +12,17 @@ const Conversations = () => {
   return (
     <DashboardLayout>
       <div className="mb-6">
-        <h1 className="text-3xl font-bold">Conversations</h1>
-        <p className="text-muted-foreground mt-1">Browse all captured AI conversations</p>
+        <h1 className="text-xl font-semibold tracking-tight">Conversations</h1>
+        <p className="text-sm text-muted-foreground mt-1">Browse all captured AI conversations</p>
       </div>
 
-      {/* Filters */}
-      <div className="flex flex-wrap gap-2 mb-6">
+      <div className="flex flex-wrap gap-1.5 mb-5">
         <button
           onClick={() => setFilter("all")}
-          className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-            filter === "all" ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+          className={`px-3 py-1.5 rounded-md text-[13px] font-medium transition-colors ${
+            filter === "all"
+              ? "bg-foreground text-background"
+              : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
           }`}
         >
           All
@@ -30,8 +31,10 @@ const Conversations = () => {
           <button
             key={p}
             onClick={() => setFilter(p)}
-            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-              filter === p ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+            className={`px-3 py-1.5 rounded-md text-[13px] font-medium transition-colors ${
+              filter === p
+                ? "bg-foreground text-background"
+                : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
             }`}
           >
             {PLATFORM_META[p].label}
@@ -39,12 +42,12 @@ const Conversations = () => {
         ))}
       </div>
 
-      <div className="grid gap-3">
-        {filtered.map((conv, i) => (
-          <ConversationCard key={conv.id} conversation={conv} index={i} />
+      <div className="space-y-1.5">
+        {filtered.map((conv) => (
+          <ConversationCard key={conv.id} conversation={conv} />
         ))}
         {filtered.length === 0 && (
-          <p className="text-muted-foreground text-center py-12">No conversations found.</p>
+          <p className="text-sm text-muted-foreground text-center py-16">No conversations found.</p>
         )}
       </div>
     </DashboardLayout>

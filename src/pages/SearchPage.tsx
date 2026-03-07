@@ -19,33 +19,35 @@ const SearchPage = () => {
   return (
     <DashboardLayout>
       <div className="mb-6">
-        <h1 className="text-3xl font-bold">Search</h1>
-        <p className="text-muted-foreground mt-1">Find conversations across all platforms</p>
+        <h1 className="text-xl font-semibold tracking-tight">Search</h1>
+        <p className="text-sm text-muted-foreground mt-1">Find conversations across all platforms</p>
       </div>
 
       <div className="relative mb-6">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
         <input
           type="text"
-          placeholder="Search by title, summary, or tag..."
+          placeholder="Search by title, summary, or tag…"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="w-full pl-10 pr-4 py-3 rounded-xl bg-card border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring text-sm"
+          className="w-full pl-9 pr-4 py-2.5 rounded-lg bg-card border border-border text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 focus:ring-offset-background"
         />
       </div>
 
       {query.trim() ? (
-        <div className="grid gap-3">
+        <div className="space-y-1.5">
           {results.length > 0 ? (
-            results.map((conv, i) => (
-              <ConversationCard key={conv.id} conversation={conv} index={i} />
+            results.map((conv) => (
+              <ConversationCard key={conv.id} conversation={conv} />
             ))
           ) : (
-            <p className="text-muted-foreground text-center py-12">No results found for "{query}"</p>
+            <p className="text-sm text-muted-foreground text-center py-16">
+              No results for "{query}"
+            </p>
           )}
         </div>
       ) : (
-        <p className="text-muted-foreground text-center py-12">Start typing to search your conversations</p>
+        <p className="text-sm text-muted-foreground text-center py-16">Start typing to search</p>
       )}
     </DashboardLayout>
   );
