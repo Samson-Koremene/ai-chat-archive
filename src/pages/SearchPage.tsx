@@ -2,13 +2,14 @@ import { useState } from "react";
 import { Search } from "lucide-react";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { ConversationCard } from "@/components/ConversationCard";
-import { mockConversations } from "@/lib/mock-data";
+import { useConversations } from "@/hooks/use-conversations";
 
 const SearchPage = () => {
   const [query, setQuery] = useState("");
+  const { data: conversations = [] } = useConversations();
 
   const results = query.trim()
-    ? mockConversations.filter(
+    ? conversations.filter(
         (c) =>
           c.title.toLowerCase().includes(query.toLowerCase()) ||
           c.summary?.toLowerCase().includes(query.toLowerCase()) ||

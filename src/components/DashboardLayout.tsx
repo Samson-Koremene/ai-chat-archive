@@ -1,7 +1,8 @@
 import { ReactNode, useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, MessageSquare, Search, BookOpen, Menu, X, ChevronRight, Moon, Sun } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { LayoutDashboard, MessageSquare, Search, BookOpen, Menu, X, ChevronRight, Moon, Sun, LogOut } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
+import { useAuth } from "@/contexts/AuthContext";
 
 function useTheme() {
   const [dark, setDark] = useState(() => {
@@ -27,8 +28,18 @@ const NAV_ITEMS = [
 
 export function DashboardLayout({ children }: { children: ReactNode }) {
   const location = useLocation();
+  const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
   const { dark, toggle } = useTheme();
+  const { user, signOut } = useAuth();
+
+  const displayName = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "User";
+  const initials = displayName.charAt(0).toUpperCase();
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/auth");
+  };
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -75,13 +86,15 @@ export function DashboardLayout({ children }: { children: ReactNode }) {
         <div className="p-3 border-t border-sidebar-border">
           <div className="flex items-center gap-2.5 px-2.5 py-1.5">
             <div className="w-7 h-7 rounded-full bg-secondary flex items-center justify-center text-[11px] font-semibold text-secondary-foreground">
-              U
+              {initials}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-[13px] font-medium text-foreground truncate">User</p>
-              <p className="text-[11px] text-muted-foreground">Free plan</p>
+              <p className="text-[13px] font-medium text-foreground truncate">{displayName}</p>
+              <p className="text-[11px] text-muted-foreground truncate">{user?.email}</p>
             </div>
-            <ChevronRight className="w-3.5 h-3.5 text-muted-foreground" />
+            <button onClick={handleSignOut} className="p-1 rounded hover:bg-sidebar-accent transition-colors" title="Sign out">
+              <LogOut className="w-3.5 h-3.5 text-muted-foreground" />
+            </button>
           </div>
         </div>
       </aside>
@@ -149,12 +162,15 @@ export function DashboardLayout({ children }: { children: ReactNode }) {
               <div className="p-3 border-t border-border">
                 <div className="flex items-center gap-2.5 px-2.5 py-1.5">
                   <div className="w-7 h-7 rounded-full bg-secondary flex items-center justify-center text-[11px] font-semibold text-secondary-foreground">
-                    U
+                    {initials}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[13px] font-medium text-foreground truncate">User</p>
-                    <p className="text-[11px] text-muted-foreground">Free plan</p>
+                    <p className="text-[13px] font-medium text-foreground truncate">{displayName}</p>
+                    <p className="text-[11px] text-muted-foreground truncate">{user?.email}</p>
                   </div>
+                  <button onClick={handleSignOut} className="p-1 rounded hover:bg-secondary transition-colors" title="Sign out">
+                    <LogOut className="w-3.5 h-3.5 text-muted-foreground" />
+                  </button>
                 </div>
               </div>
             </motion.div>

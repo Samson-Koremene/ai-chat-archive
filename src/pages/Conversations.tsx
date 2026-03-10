@@ -1,13 +1,12 @@
 import { useState } from "react";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { ConversationCard } from "@/components/ConversationCard";
-import { mockConversations, PLATFORM_META, type Platform } from "@/lib/mock-data";
+import { PLATFORM_META, type Platform } from "@/lib/mock-data";
+import { useConversations } from "@/hooks/use-conversations";
 
 const Conversations = () => {
   const [filter, setFilter] = useState<Platform | "all">("all");
-
-  const filtered =
-    filter === "all" ? mockConversations : mockConversations.filter((c) => c.platform === filter);
+  const { data: conversations = [], isLoading } = useConversations(filter);
 
   return (
     <DashboardLayout>
@@ -43,10 +42,13 @@ const Conversations = () => {
       </div>
 
       <div className="space-y-1.5">
-        {filtered.map((conv) => (
-          <ConversationCard key={conv.id} conversation={conv} />
-        ))}
-        {filtered.length === 0 && (
+        {isLoading ? (
+          <p className="text-sm text-muted-foreground text-center py-16">Loading…</p>
+        ) : conversations.length > 0 ? (
+          conversations.map((conv) => (
+            <ConversationCard key={conv.id} conversation={conv} />
+          ))
+        ) : (
           <p className="text-sm text-muted-foreground text-center py-16">No conversations found.</p>
         )}
       </div>
