@@ -1,1 +1,4 @@
 project_id = "vdlkoqdzqzelzgtrwtyr"
+
+[functions.capture-conversation]
+verify_jwt = false
