@@ -28,8 +28,18 @@ const NAV_ITEMS = [
 
 export function DashboardLayout({ children }: { children: ReactNode }) {
   const location = useLocation();
+  const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
   const { dark, toggle } = useTheme();
+  const { user, signOut } = useAuth();
+
+  const displayName = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "User";
+  const initials = displayName.charAt(0).toUpperCase();
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/auth");
+  };
 
   return (
     <div className="flex min-h-screen bg-background">
