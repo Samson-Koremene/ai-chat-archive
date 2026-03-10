@@ -1,18 +1,31 @@
 import { Link } from "react-router-dom";
-import { MessageSquare, Clock, ArrowUpRight } from "lucide-react";
+import { MessageSquare, ArrowUpRight } from "lucide-react";
 import { PlatformBadge } from "./PlatformBadge";
-import type { Conversation } from "@/lib/mock-data";
+import type { Platform } from "@/lib/mock-data";
+
+interface ConversationLike {
+  id: string;
+  platform: Platform;
+  title: string;
+  created_at?: string;
+  createdAt?: string;
+  message_count?: number;
+  messageCount?: number;
+  summary?: string | null;
+  tags?: string[];
+}
 
 interface ConversationCardProps {
-  conversation: Conversation;
-  index?: number;
+  conversation: ConversationLike;
 }
 
 export function ConversationCard({ conversation }: ConversationCardProps) {
-  const date = new Date(conversation.createdAt).toLocaleDateString("en-US", {
+  const dateStr = conversation.created_at || conversation.createdAt || "";
+  const date = new Date(dateStr).toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
   });
+  const msgCount = conversation.message_count ?? conversation.messageCount ?? 0;
 
   return (
     <Link
@@ -43,7 +56,7 @@ export function ConversationCard({ conversation }: ConversationCardProps) {
       <div className="flex items-center gap-3 shrink-0 text-xs text-muted-foreground">
         <span className="flex items-center gap-1">
           <MessageSquare className="w-3.5 h-3.5" />
-          {conversation.messageCount}
+          {msgCount}
         </span>
         <ArrowUpRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity text-primary" />
       </div>
