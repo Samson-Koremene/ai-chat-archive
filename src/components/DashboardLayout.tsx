@@ -162,12 +162,15 @@ export function DashboardLayout({ children }: { children: ReactNode }) {
               <div className="p-3 border-t border-border">
                 <div className="flex items-center gap-2.5 px-2.5 py-1.5">
                   <div className="w-7 h-7 rounded-full bg-secondary flex items-center justify-center text-[11px] font-semibold text-secondary-foreground">
-                    U
+                    {initials}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[13px] font-medium text-foreground truncate">User</p>
-                    <p className="text-[11px] text-muted-foreground">Free plan</p>
+                    <p className="text-[13px] font-medium text-foreground truncate">{displayName}</p>
+                    <p className="text-[11px] text-muted-foreground truncate">{user?.email}</p>
                   </div>
+                  <button onClick={handleSignOut} className="p-1 rounded hover:bg-secondary transition-colors" title="Sign out">
+                    <LogOut className="w-3.5 h-3.5 text-muted-foreground" />
+                  </button>
                 </div>
               </div>
             </motion.div>
