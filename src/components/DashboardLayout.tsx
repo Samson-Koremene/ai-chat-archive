@@ -1,7 +1,8 @@
 import { ReactNode, useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, MessageSquare, Search, BookOpen, Menu, X, ChevronRight, Moon, Sun } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { LayoutDashboard, MessageSquare, Search, BookOpen, Menu, X, ChevronRight, Moon, Sun, LogOut } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
+import { useAuth } from "@/contexts/AuthContext";
 
 function useTheme() {
   const [dark, setDark] = useState(() => {
