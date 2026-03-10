@@ -1,13 +1,16 @@
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { StatCard } from "@/components/StatCard";
 import { ConversationCard } from "@/components/ConversationCard";
-import { mockConversations, PLATFORM_META } from "@/lib/mock-data";
+import { PLATFORM_META } from "@/lib/mock-data";
+import { useConversations } from "@/hooks/use-conversations";
 import { MessageSquare, Layers, Brain, Zap } from "lucide-react";
 
 const Index = () => {
-  const totalMessages = mockConversations.reduce((sum, c) => sum + c.messageCount, 0);
-  const platformCount = new Set(mockConversations.map((c) => c.platform)).size;
-  const recent = mockConversations.slice(0, 4);
+  const { data: conversations = [], isLoading } = useConversations();
+
+  const totalMessages = conversations.reduce((sum, c) => sum + c.message_count, 0);
+  const platformCount = new Set(conversations.map((c) => c.platform)).size;
+  const recent = conversations.slice(0, 4);
 
   return (
     <DashboardLayout>
@@ -17,18 +20,20 @@ const Index = () => {
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
-        <StatCard icon={MessageSquare} title="Conversations" value={mockConversations.length} />
+        <StatCard icon={MessageSquare} title="Conversations" value={conversations.length} />
         <StatCard icon={Layers} title="Messages" value={totalMessages} />
         <StatCard icon={Brain} title="Platforms" value={platformCount} />
-        <StatCard icon={Zap} title="Saved Today" value={2} subtitle="+2 from yesterday" />
+        <StatCard icon={Zap} title="Saved Today" value={conversations.filter(c => {
+          const today = new Date().toDateString();
+          return new Date(c.created_at).toDateString() === today;
+        }).length} />
       </div>
 
-      {/* Platform breakdown */}
       <div className="mb-8">
         <h2 className="text-sm font-medium mb-3">Platforms</h2>
         <div className="flex flex-wrap gap-2">
           {Object.entries(PLATFORM_META).map(([key, meta]) => {
-            const count = mockConversations.filter((c) => c.platform === key).length;
+            const count = conversations.filter((c) => c.platform === key).length;
             return (
               <div key={key} className="flex items-center gap-2 bg-card rounded-md border border-border px-3 py-2">
                 <span className={`w-2 h-2 rounded-full ${meta.color}`} />
@@ -40,13 +45,18 @@ const Index = () => {
         </div>
       </div>
 
-      {/* Recent conversations */}
       <div>
         <h2 className="text-sm font-medium mb-3">Recent conversations</h2>
         <div className="space-y-1.5">
-          {recent.map((conv) => (
-            <ConversationCard key={conv.id} conversation={conv} />
-          ))}
+          {isLoading ? (
+            <p className="text-sm text-muted-foreground text-center py-16">Loading…</p>
+          ) : recent.length > 0 ? (
+            recent.map((conv) => (
+              <ConversationCard key={conv.id} conversation={conv} />
+            ))
+          ) : (
+            <p className="text-sm text-muted-foreground text-center py-16">No conversations yet. Start capturing from your browser extension!</p>
+          )}
         </div>
       </div>
     </DashboardLayout>
