@@ -1,7 +1,7 @@
 # Browser Extension Reference (Chrome/Edge MV3)
 
 This folder contains reference code for the Multi-AI Chat Memory browser extension.
-**This code does NOT run in Lovable** — build it separately with standard web extension tooling.
+**This code does NOT run in this app** — build it separately with standard web extension tooling.
 
 ## Folder Structure
 

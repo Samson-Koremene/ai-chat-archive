@@ -85,6 +85,27 @@ export type Database = {
           },
         ]
       }
+      extension_keys: {
+        Row: {
+          created_at: string
+          key_hash: string
+          last_used_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          key_hash: string
+          last_used_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          key_hash?: string
+          last_used_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

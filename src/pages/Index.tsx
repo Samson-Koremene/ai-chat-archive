@@ -12,6 +12,22 @@ const Index = () => {
   const platformCount = new Set(conversations.map((c) => c.platform)).size;
   const recent = conversations.slice(0, 4);
 
+  const last7Days = Array.from({ length: 7 }, (_, i) => {
+    const date = new Date();
+    date.setDate(date.getDate() - (6 - i));
+    return date.toISOString().split("T")[0];
+  });
+
+  const conversationsChartData = last7Days.map((date) => 
+    conversations.filter((c) => c.created_at.startsWith(date)).length
+  );
+
+  const messagesChartData = last7Days.map((date) => 
+    conversations
+      .filter((c) => c.created_at.startsWith(date))
+      .reduce((sum, c) => sum + (c.message_count || 0), 0)
+  );
+
   return (
     <DashboardLayout>
       <div className="mb-8">
@@ -20,8 +36,8 @@ const Index = () => {
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
-        <StatCard icon={MessageSquare} title="Conversations" value={conversations.length} />
-        <StatCard icon={Layers} title="Messages" value={totalMessages} />
+        <StatCard icon={MessageSquare} title="Conversations" value={conversations.length} chartData={conversationsChartData} />
+        <StatCard icon={Layers} title="Messages" value={totalMessages} chartData={messagesChartData} />
         <StatCard icon={Brain} title="Platforms" value={platformCount} />
         <StatCard icon={Zap} title="Saved Today" value={conversations.filter(c => {
           const today = new Date().toDateString();

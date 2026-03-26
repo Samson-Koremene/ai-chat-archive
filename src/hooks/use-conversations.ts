@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import type { Platform } from "@/lib/mock-data";
@@ -80,5 +80,50 @@ export function useMessages(conversationId: string | undefined) {
       return (data as DbMessage[]) ?? [];
     },
     enabled: !!user && !!conversationId,
+  });
+}
+
+export function useUpdateConversation() {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: async ({ id, title, summary, tags }: { 
+      id: string; 
+      title: string; 
+      summary: string | null; 
+      tags: string[] 
+    }) => {
+      const { data, error } = await supabase
+        .from("conversations")
+        .update({ title, summary, tags, updated_at: new Date().toISOString() })
+        .eq("id", id)
+        .select()
+        .single();
+      
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["conversations"] });
+      queryClient.invalidateQueries({ queryKey: ["conversation", data.id] });
+    },
+  });
+}
+
+export function useDeleteConversation() {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase
+        .from("conversations")
+        .delete()
+        .eq("id", id);
+      
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["conversations"] });
+    },
   });
 }

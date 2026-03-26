@@ -7,18 +7,23 @@
   console.log(`[MemoryAI] Detected platform: ${platform}`);
 
   try {
-    const adapter = await import(`./adapters/${platform}/extractor.js`);
-    const observer = await import(`./adapters/${platform}/observer.js`);
-    const { captureConversation } = await import("./utils/api.js");
+    const extractorUrl = chrome.runtime.getURL(`adapters/${platform}/extractor.js`);
+    const observerUrl = chrome.runtime.getURL(`adapters/${platform}/observer.js`);
+    const apiUrl = chrome.runtime.getURL("utils/api.js");
 
-    // Get auth token from storage (set via popup after login)
-    const { authToken } = await chrome.storage.local.get("authToken");
-    if (!authToken) {
-      console.warn("[MemoryAI] Not authenticated. Please log in via the extension popup.");
-      return;
-    }
+    const adapter = await import(extractorUrl);
+    const observer = await import(observerUrl);
+    const { captureConversation } = await import(apiUrl);
 
-    observer.startObserving((newMessages) => {
+    observer.startObserving(async (newMessages) => {
+      // Read latest auth token each time so capture starts working
+      // as soon as the user signs in from the popup.
+      const { authToken, extensionKey } = await chrome.storage.local.get(["authToken", "extensionKey"]);
+      if (!authToken && !extensionKey) {
+        console.warn("[MemoryAI] Not authenticated. Open the extension popup and sign in or paste your extension key.");
+        return;
+      }
+
       const normalized = newMessages.map((msg) => ({
         role: msg.role,
         content: msg.content,

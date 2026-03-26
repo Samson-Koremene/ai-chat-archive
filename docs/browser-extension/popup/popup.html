@@ -3,20 +3,309 @@
 <head>
   <meta charset="UTF-8">
   <style>
-    body { width: 320px; padding: 16px; font-family: system-ui, sans-serif; }
-    h1 { font-size: 18px; margin: 0 0 8px; }
-    .status { padding: 8px 12px; border-radius: 8px; background: #f0f9f0; color: #166534; font-size: 13px; margin-bottom: 12px; }
-    .stat { display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px; border-bottom: 1px solid #eee; }
-    .btn { display: block; width: 100%; padding: 10px; border: none; border-radius: 8px; background: #2563eb; color: white; font-size: 14px; cursor: pointer; margin-top: 12px; }
-    .btn:hover { background: #1d4ed8; }
+    body {
+      width: 340px;
+      padding: 14px 16px 16px;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      background: #020817;
+      color: #e5e7eb;
+    }
+    h1 {
+      font-size: 18px;
+      margin: 0 0 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    h1 span.logo {
+      width: 24px;
+      height: 24px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at 30% 0%, #38bdf8, #6366f1 45%, #a855f7);
+      color: #0b1020;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .subtitle {
+      font-size: 11px;
+      color: #9ca3af;
+      margin-bottom: 10px;
+    }
+    .section-card {
+      border-radius: 12px;
+      border: 1px solid #1f2937;
+      background: radial-gradient(circle at top left, rgba(56,189,248,0.16), transparent 45%),
+                  radial-gradient(circle at bottom right, rgba(129,140,248,0.12), transparent 50%),
+                  #020617;
+      padding: 10px 12px 12px;
+      margin-bottom: 10px;
+    }
+    .section-card.secondary {
+      background: #020617;
+    }
+    .section-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: #e5e7eb;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .section-title span.badge {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: rgba(55,65,81,0.85);
+      color: #f9fafb;
+    }
+    .status {
+      padding: 8px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      margin-bottom: 10px;
+      border: 1px solid rgba(31,41,55,0.9);
+      background: rgba(15,23,42,0.9);
+    }
+    .status.connected {
+      background: rgba(22,163,74,0.12);
+      border-color: rgba(34,197,94,0.6);
+      color: #bbf7d0;
+    }
+    .status.disconnected {
+      background: rgba(248,113,113,0.12);
+      border-color: rgba(248,113,113,0.7);
+      color: #fecaca;
+    }
+    .stat {
+      display: flex;
+      justify-content: space-between;
+      padding: 5px 0;
+      font-size: 12px;
+      border-bottom: 1px solid #111827;
+      color: #d1d5db;
+    }
+    .stat:last-of-type {
+      border-bottom: none;
+    }
+    .stat span.label {
+      color: #9ca3af;
+    }
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 9px 10px;
+      border: none;
+      border-radius: 999px;
+      background: linear-gradient(to right, #4f46e5, #06b6d4);
+      color: white;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.08s ease;
+      box-shadow: 0 10px 25px rgba(59,130,246,0.35);
+    }
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 32px rgba(59,130,246,0.45);
+    }
+    .btn:active {
+      transform: translateY(0);
+      box-shadow: 0 6px 16px rgba(59,130,246,0.35);
+    }
+    .btn.secondary {
+      background: #111827;
+      border: 1px solid #1f2937;
+      box-shadow: none;
+      margin-top: 8px;
+    }
+    .btn.secondary:hover {
+      background: #020617;
+      box-shadow: 0 6px 16px rgba(15,23,42,0.65);
+    }
+    .btn.google {
+      background: #ffffff;
+      color: #3c4043;
+      border: 1px solid #dadce0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+      margin-top: 4px;
+    }
+    .btn.google:hover {
+      background: #f8f9fa;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.16);
+    }
+    .google-icon {
+      width: 18px;
+      height: 18px;
+      border-radius: 2px;
+      background: #ffffff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .google-icon-inner {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: conic-gradient(
+        from 180deg at 50% 50%,
+        #4285f4 0deg,
+        #4285f4 45deg,
+        #34a853 90deg,
+        #fbbc05 180deg,
+        #ea4335 270deg,
+        #4285f4 360deg
+      );
+      -webkit-mask: radial-gradient(farthest-side, transparent 55%, #000 57%);
+      mask: radial-gradient(farthest-side, transparent 55%, #000 57%);
+    }
+    .auth-section {
+      margin-top: 4px;
+      padding-top: 4px;
+    }
+    .auth-hint {
+      font-size: 11px;
+      color: #9ca3af;
+      margin: 6px 0 8px;
+    }
+    .or-divider {
+      margin: 8px 0 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 10px;
+      color: #6b7280;
+    }
+    .or-divider::before,
+    .or-divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, transparent, #1f2937, transparent);
+    }
+    .settings {
+      margin-top: 6px;
+      padding-top: 8px;
+      border-top: 1px solid #111827;
+    }
+    .settings h2 {
+      font-size: 12px;
+      margin: 0 0 4px;
+      color: #e5e7eb;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .settings h2 span {
+      font-size: 10px;
+      color: #6b7280;
+    }
+    .label {
+      display: block;
+      font-size: 11px;
+      color: #9ca3af;
+      margin: 6px 0 3px;
+    }
+    .input {
+      width: 100%;
+      padding: 7px 8px;
+      border: 1px solid #111827;
+      border-radius: 8px;
+      font-size: 12px;
+      margin-bottom: 4px;
+      box-sizing: border-box;
+      background: #020617;
+      color: #e5e7eb;
+    }
+    .input::placeholder {
+      color: #4b5563;
+    }
+    .error {
+      color: #fca5a5;
+      font-size: 11px;
+      margin-top: 4px;
+    }
+    .success {
+      color: #6ee7b7;
+      font-size: 11px;
+      margin-top: 4px;
+    }
   </style>
 </head>
 <body>
-  <h1>🧠 MemoryAI</h1>
-  <div class="status" id="status">Connected</div>
-  <div class="stat"><span>Chats saved today</span><span id="count">0</span></div>
-  <div class="stat"><span>Current platform</span><span id="platform">—</span></div>
-  <button class="btn" id="openDashboard">Open Dashboard</button>
+  <h1><span class="logo">M</span>Memory AI Capture</h1>
+  <div class="subtitle">Link your browser to the Memory AI dashboard.</div>
+  <div class="status" id="status">Checking connection…</div>
+  
+  <div id="authenticated" style="display: none;" class="section-card">
+    <div class="section-title">
+      <span>Capture status</span>
+      <span class="badge">Connected</span>
+    </div>
+    <div class="stat">
+      <span class="label">Chats saved today</span><span id="count">0</span>
+    </div>
+    <div class="stat">
+      <span class="label">Current platform</span><span id="platform">—</span>
+    </div>
+    <button class="btn" id="openDashboard">Open dashboard</button>
+    <button class="btn secondary" id="signOutBtn">Sign out</button>
+  </div>
+
+  <div id="unauthenticated" style="display: none;" class="section-card">
+    <div class="section-title">
+      <span>Connect your account</span>
+      <span class="badge">Required</span>
+    </div>
+    <div class="auth-section">
+      <p class="auth-hint">
+        <strong>Recommended (Google users):</strong> In the dashboard go to <strong>Extension</strong>, generate a key,
+        then paste it here.
+      </p>
+      <label class="label" for="extensionKeyInput">Extension key</label>
+      <input type="password" id="extensionKeyInput" class="input" placeholder="Paste key from dashboard → Extension" autocomplete="off" />
+      <button class="btn" id="linkExtensionKeyBtn">Link with extension key</button>
+
+      <div class="or-divider">or</div>
+      <p class="auth-hint">Open the dashboard to sign in with Google, then generate a key above.</p>
+      <button class="btn google" id="signInGoogleBtn">
+        <span class="google-icon"><span class="google-icon-inner"></span></span>
+        <span>Open dashboard (Google)</span>
+      </button>
+      <div class="or-divider">or</div>
+      <p class="auth-hint">Advanced: sign in with email + password (same as Supabase account).</p>
+      <input type="email" id="email" class="input" placeholder="Email (optional)" />
+      <input type="password" id="password" class="input" placeholder="Password (optional)" />
+      <button class="btn" id="signInBtn">Sign In with email</button>
+      <div id="authMessage"></div>
+    </div>
+  </div>
+
+  <div class="settings">
+    <h2>Settings</h2>
+    <label class="label" for="dashboardUrl">Dashboard URL</label>
+    <input id="dashboardUrl" class="input" placeholder="http://localhost:8080/" />
+
+    <label class="label" for="supabaseUrl">Supabase URL</label>
+    <input id="supabaseUrl" class="input" placeholder="https://xxxx.supabase.co" />
+
+    <label class="label" for="supabaseAnonKey">Supabase anon key</label>
+    <input id="supabaseAnonKey" class="input" placeholder="eyJhbGciOi..." />
+
+    <button class="btn secondary" id="saveSettingsBtn">Save settings</button>
+    <button class="btn secondary" id="resetSettingsBtn">Reset to defaults</button>
+    <div id="settingsMessage"></div>
+  </div>
+
   <script src="popup.js"></script>
 </body>
 </html>

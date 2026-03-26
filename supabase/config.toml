@@ -2,3 +2,6 @@ project_id = "vdlkoqdzqzelzgtrwtyr"
 
 [functions.capture-conversation]
 verify_jwt = false
+
+[functions.generate-extension-key]
+verify_jwt = false

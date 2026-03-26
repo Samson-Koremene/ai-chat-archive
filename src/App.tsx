@@ -5,19 +5,25 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import Index from "./pages/Index";
 import Conversations from "./pages/Conversations";
 import ConversationDetail from "./pages/ConversationDetail";
 import SearchPage from "./pages/SearchPage";
 import Prompts from "./pages/Prompts";
+import Analytics from "./pages/Analytics";
+import Tags from "./pages/Tags";
+import Export from "./pages/Export";
+import Extension from "./pages/Extension";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <AuthProvider>
+  <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
       <TooltipProvider>
         <Toaster />
         <Sonner />
@@ -29,12 +35,17 @@ const App = () => (
             <Route path="/conversation/:id" element={<ProtectedRoute><ConversationDetail /></ProtectedRoute>} />
             <Route path="/search" element={<ProtectedRoute><SearchPage /></ProtectedRoute>} />
             <Route path="/prompts" element={<ProtectedRoute><Prompts /></ProtectedRoute>} />
+            <Route path="/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
+            <Route path="/tags" element={<ProtectedRoute><Tags /></ProtectedRoute>} />
+            <Route path="/export" element={<ProtectedRoute><Export /></ProtectedRoute>} />
+            <Route path="/extension" element={<ProtectedRoute><Extension /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>
     </AuthProvider>
   </QueryClientProvider>
+  </ThemeProvider>
 );
 
 export default App;

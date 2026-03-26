@@ -1,36 +1,31 @@
 import { ReactNode, useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { LayoutDashboard, MessageSquare, Search, BookOpen, Menu, X, ChevronRight, Moon, Sun, LogOut } from "lucide-react";
+import { LayoutDashboard, MessageSquare, Search, BookOpen, BarChart3, Tag, Download, Menu, X, ChevronRight, Moon, Sun, LogOut, Puzzle } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
-
-function useTheme() {
-  const [dark, setDark] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return localStorage.getItem("theme") === "dark" ||
-      (!localStorage.getItem("theme") && window.matchMedia("(prefers-color-scheme: dark)").matches);
-  });
-
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark", dark);
-    localStorage.setItem("theme", dark ? "dark" : "light");
-  }, [dark]);
-
-  return { dark, toggle: () => setDark((d) => !d) };
-}
+import { useTheme } from "@/components/ThemeProvider";
+import { GlobalCommandMenu } from "@/components/GlobalCommandMenu";
 
 const NAV_ITEMS = [
   { to: "/", icon: LayoutDashboard, label: "Overview" },
   { to: "/conversations", icon: MessageSquare, label: "Conversations" },
   { to: "/search", icon: Search, label: "Search" },
+  { to: "/tags", icon: Tag, label: "Tags" },
+  { to: "/analytics", icon: BarChart3, label: "Analytics" },
+  { to: "/export", icon: Download, label: "Export" },
   { to: "/prompts", icon: BookOpen, label: "Prompts" },
+  { to: "/extension", icon: Puzzle, label: "Extension" },
 ];
 
 export function DashboardLayout({ children }: { children: ReactNode }) {
   const location = useLocation();
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { dark, toggle } = useTheme();
+  const { theme, setTheme } = useTheme();
+  
+  const dark = theme === "dark" || (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+  const toggle = () => setTheme(dark ? "light" : "dark");
+
   const { user, signOut } = useAuth();
 
   const displayName = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "User";
@@ -42,9 +37,9 @@ export function DashboardLayout({ children }: { children: ReactNode }) {
   };
 
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="flex min-h-screen bg-background relative selection:bg-primary/20">
       {/* Desktop sidebar */}
-      <aside className="hidden md:flex w-[240px] flex-col border-r border-sidebar-border bg-sidebar shrink-0 sticky top-0 h-screen">
+      <aside className="hidden md:flex w-[240px] flex-col border-r border-sidebar-border bg-sidebar/70 backdrop-blur-xl shrink-0 sticky top-0 h-screen z-10 transition-colors">
         <div className="h-14 flex items-center px-5 border-b border-sidebar-border">
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-lg bg-primary flex items-center justify-center">
@@ -100,7 +95,7 @@ export function DashboardLayout({ children }: { children: ReactNode }) {
       </aside>
 
       {/* Mobile header */}
-      <div className="md:hidden fixed top-0 inset-x-0 z-50 h-14 bg-background border-b border-border px-4 flex items-center justify-between">
+      <div className="md:hidden fixed top-0 inset-x-0 z-50 h-14 bg-background/70 backdrop-blur-xl border-b border-border px-4 flex items-center justify-between transition-colors">
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-lg bg-primary flex items-center justify-center">
             <span className="text-primary-foreground text-xs font-bold">M</span>
@@ -178,6 +173,8 @@ export function DashboardLayout({ children }: { children: ReactNode }) {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <GlobalCommandMenu />
 
       {/* Main content */}
       <main className="flex-1 min-w-0 overflow-y-auto">

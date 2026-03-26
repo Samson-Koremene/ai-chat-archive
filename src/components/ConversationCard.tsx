@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
-import { MessageSquare, ArrowUpRight } from "lucide-react";
+import { MessageSquare, ArrowUpRight, Copy } from "lucide-react";
+import { toast } from "sonner";
 import { PlatformBadge } from "./PlatformBadge";
 import type { Platform } from "@/lib/mock-data";
+import { SpotlightCard } from "./SpotlightCard";
 
 interface ConversationLike {
   id: string;
@@ -27,8 +29,17 @@ export function ConversationCard({ conversation }: ConversationCardProps) {
   });
   const msgCount = conversation.message_count ?? conversation.messageCount ?? 0;
 
+  const handleCopyLink = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const url = `${window.location.origin}/conversation/${conversation.id}`;
+    navigator.clipboard.writeText(url);
+    toast.success("Link copied to clipboard");
+  };
+
   return (
-    <Link
+    <SpotlightCard
+      as={Link}
       to={`/conversation/${conversation.id}`}
       className="group flex items-center gap-4 bg-card rounded-lg px-4 py-3.5 border border-border hover:border-primary/30 transition-colors"
     >
@@ -53,13 +64,20 @@ export function ConversationCard({ conversation }: ConversationCardProps) {
           </div>
         )}
       </div>
-      <div className="flex items-center gap-3 shrink-0 text-xs text-muted-foreground">
-        <span className="flex items-center gap-1">
+      <div className="flex items-center gap-2 shrink-0 text-xs text-muted-foreground">
+        <span className="flex items-center gap-1 mr-2">
           <MessageSquare className="w-3.5 h-3.5" />
           {msgCount}
         </span>
+        <button 
+          onClick={handleCopyLink}
+          className="p-1.5 -m-1.5 hover:bg-secondary rounded-md opacity-0 group-hover:opacity-100 transition-all text-muted-foreground hover:text-foreground"
+          title="Copy Link"
+        >
+          <Copy className="w-4 h-4" />
+        </button>
         <ArrowUpRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity text-primary" />
       </div>
-    </Link>
+    </SpotlightCard>
   );
 }
